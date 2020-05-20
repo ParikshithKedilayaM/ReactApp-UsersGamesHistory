@@ -7,6 +7,7 @@ class EnterUserDetails extends Component {
     lname : '',
     uname : '',
     games : 0,
+    error: '',
   }
   changeFname =(event) => {
     this.setState({
@@ -25,13 +26,34 @@ class EnterUserDetails extends Component {
   }
 
   checkIfExists = (val) => {
-    return this.props.userList.filter(user => (val === user.slice(2,3).toString()))
+    const users = this.props.userList;
+    for (let user of users) {
+      if (user.uname === val) {
+        return true;
+      }
+    }
+    return false;
   }
+
+  setErrorMessage = (message) => {
+    this.setState({
+      error : message,
+    });
+  };
 
   sendResults = (event) => {
     event.preventDefault();
-    this.checkIfExists(this.state.uname) &&
-    this.props.addUser ([this.state.fname, this.state.lname, this.state.uname, this.state.games])
+    const ifUserExists = this.checkIfExists(this.state.uname);
+    if (!ifUserExists) {
+      this.setErrorMessage('');
+      this.props.addUser ({fname : this.state.fname,
+                         lname : this.state.lname,
+                         uname : this.state.uname,
+                         games : this.state.games,
+                        });
+    } else {
+       this.setErrorMessage('Username taken! Choose a new one.');
+    }
   }
 
   inputIsEmpty = () => {
@@ -49,8 +71,8 @@ class EnterUserDetails extends Component {
           <label>Username : </label>
           <input type = "text" value = {this.state.uname} onChange = {this.changeUname} />
           <button disabled={this.inputIsEmpty()}>Add User</button>
-<p>Holy {this.checkIfExists(this.state.uname)}</p>
         </form>
+        <p className = "error">{this.state.error}</p>
       </div>
     )
   }

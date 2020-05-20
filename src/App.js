@@ -10,12 +10,6 @@ class App extends Component {
     users : [],
   }
 
-  updateUsers = (userlist) => {
-    this.setState({
-      users : userlist
-    })
-  }
-
   addUser = user => {
     this.setState( prevList =>({
       users : [...prevList.users, user],
@@ -28,7 +22,6 @@ class App extends Component {
         <Header />
         <EnterUserDetails userList = {this.state.users} addUser = {this.addUser}/>
         <ListUsers userList ={this.state.users}/>
-        {JSON.stringify(this.state.users)}
       </div>
     );
   }
